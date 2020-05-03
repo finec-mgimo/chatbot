@@ -1,5 +1,6 @@
 # chatbot
-Creating a simple chatbot for MGIMO Finec
+
+A simple chatbot example for MGIMO Finec.
 
 ## How to reproduce
 
