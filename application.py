@@ -60,8 +60,14 @@ f"""Я услышал от вас:
 )
     update.message.reply_text(msg)
 
+# На локальной машине - запишем API_TOKEN и PROXY_URL
+# в системные переменные из 'config.env'.
+# На удаленной машине это будет сделано через меню настроек.
+load_dotenv('config.env')      
+API_TOKEN = os.getenv("API_TOKEN")
+PROXY_URL = os.getenv("PROXY_URL")
 
-def main(token: str, proxy_url: str):
+def app(token: str = API_TOKEN, proxy_url: str=PROXY_URL):
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
@@ -93,12 +99,4 @@ def main(token: str, proxy_url: str):
 
 
 if __name__ == '__main__':        
-    # На локальной машине - запишем API_TOKEN и PROXY_URL
-    # в системные переменные из 'config.env'.
-    # На удаленной машине это будет сделано через меню настроек.
-    load_dotenv('config.env')  
-    
-    API_TOKEN = os.getenv("API_TOKEN")
-    PROXY_URL = os.getenv("PROXY_URL")
-    assert len(API_TOKEN) == 46
-    main(token=API_TOKEN, proxy_url=PROXY_URL)
+    app()
