@@ -23,7 +23,7 @@ PROXY_URL=socks5h://163.172.152.192:1080
 4. Make sure depenencies are installed:
 
 ```
-pip install -U -r requirements.txt
+pip install -r requirements.txt
 ```
 
 5. Start the bot:
