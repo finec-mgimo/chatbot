@@ -1,6 +1,21 @@
 # chatbot
 
-A simple chatbot example for MGIMO Finec.
+A simple chatbot example - just \start and \help commands and and relaying text you just said.
+
+You can expect to communicate with a bot like:
+
+```
+/start
+FinecJuniorBot: Привет, я младший чатбот Финэка МГИМО! Я появился на свет 2 мая 2020 года. Я только учусь общаться с вами.
+
+/help
+FinecJuniorBot: По команде /help я буду рассказывать как со мной взаимодействовать.
+
+Do you use proxy?
+FinecJuniorBot: Я услышал от вас:
+- Do you use proxy?
+Пока я не знаю, что делать с этой информацией. ((
+```
 
 ## How to reproduce
 
@@ -13,11 +28,10 @@ git clone https://github.com/finec-mgimo/chatbot.git
 cd chatbot
 ```
 
-3. Create text file `config.env` with following content
+3. Create text file `config.txt` with following content
 
 ```
-API_TOKEN=<your token here>
-PROXY_URL=socks5h://163.172.152.192:1080
+API_TOKEN=<your token from @BotFather here>
 ```
 
 4. Make sure depenencies are installed:
@@ -25,6 +39,7 @@ PROXY_URL=socks5h://163.172.152.192:1080
 ```
 pip install -U -r requirements.txt
 ```
+(or even better use virtual environment)
 
 5. Start the bot:
 
@@ -37,5 +52,5 @@ python application.py
 ```
 /start
 /help
-Произвольный текст
+Type any ecent text you like!
 ```
