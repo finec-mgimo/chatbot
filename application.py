@@ -1,30 +1,28 @@
+"""Simple bot that reacts to /start and / help and replies back to unknown text."""
+
+# Polling-вариант (более простой, реализован сейчас):
+# 1. Запускаем цикл и постоянно опрашиваем API Telegram
+#    updater.start_polling()
+
+# Webhook-вариант ("промышленный" вариант):
+# 1. приложение на Flask должно обрабтывать на входе запрос POST от Telegram 
+#    на своем endpoint'е
+# 2. по результатам обработки этого запроса приложение "звонит" POST запросом
+#    в Telegram API.
+
+# Упрощения:
+# - все делается последовательно, нет аснихронности / балансировщика
+# - мы не храним состояние бота, нет базы данных
+# - нет кнопок, только \команды
+
 import os
 import logging
 
 from dotenv import load_dotenv
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-
-# Ограничения:
-# - все делается последовательно, нет аснихронности / балансировщика
-# - мы не храним состояние бот и не храним историю сообщений
-
-
-# Webhook-вариант:
-# 1. приложение на Flask должно обрабтывать на входе запрос POST от Telegram 
-#    на своем endpoint'е
-# 2. по результатам обработки этого запроса приложение "звонит" POST запросом
-#    в Telegram API.
-
-# Polling-вариант:
-# 1. Запускаем цикл и постоянно опрашиваем API Telegram
-# Пример: 
-#  https://github.com/python-telegram-bot/python-telegram-bot/blob/master/examples/echobot2.py
-
-
 # Enable logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -35,7 +33,7 @@ def error(update, context):
 
 def start(update, context):
     """Send a message when the command /start is issued."""
-    msg = ("Привет, я чатбот Финэка МГИМО! " 
+    msg = ("Привет, я младший чатбот Финэка МГИМО! " 
            "Я появился на свет 2 мая 2020 года. "
            "Я только учусь общаться с вами.")
     update.message.reply_text(msg)
@@ -57,21 +55,11 @@ f"""Я услышал от вас:
 )
     update.message.reply_text(msg)
 
-# На локальной машине - запишем API_TOKEN и PROXY_URL
-# в системные переменные из 'config.env'.
-# На удаленной машине это будет сделано через меню настроек.
-load_dotenv('config.env')      
-API_TOKEN = os.getenv("API_TOKEN")
-PROXY_URL = os.getenv("PROXY_URL")
 
-def app(token: str = API_TOKEN, proxy_url: str=PROXY_URL):
+def app(token: str):
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
-    # Make sure to set use_context=True to use the new context based callbacks
-    # Post version 12 this will no longer be necessary
-    updater = Updater(token, 
-                      request_kwargs={'proxy_url': proxy_url},
-                      use_context=True)
+    updater = Updater(token)
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
@@ -83,7 +71,7 @@ def app(token: str = API_TOKEN, proxy_url: str=PROXY_URL):
     for name, func in [("start", start), ("help", help)]:
        dp.add_handler(CommandHandler(name, func))
 
-    # on noncommand i.e message - echo the message on Telegram
+    # on noncommand - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
 
     # Start the Bot
@@ -93,7 +81,8 @@ def app(token: str = API_TOKEN, proxy_url: str=PROXY_URL):
     # SIGTERM or SIGABRT. This should be used most of the time, since
     # start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
-
-
+    
 if __name__ == '__main__':        
-    app()
+    # config.txt has API_TOKEN from @BotFather
+    load_dotenv('config.txt')      
+    app(token=os.getenv("API_TOKEN"))
